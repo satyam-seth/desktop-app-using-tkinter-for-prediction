@@ -1,5 +1,9 @@
 # start code
 
+import pandas as pd
+
+import pickle
+
 from tkinter import *
 
 import tkinter as tk
@@ -9,6 +13,21 @@ from tkinter import ttk, Frame, Menu
 from PIL import ImageTk, Image
 
 import time
+
+import os
+
+#ML
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+# with open(BASE_DIR+'\\desktop-app-using-tkinter-for-prediction-master\\Loan_Model.pkl', 'rb') as file:  
+#     Pickled_LR_Model = pickle.load(file)
+
+with open(BASE_DIR+'\\desktop-app-using-tkinter-for-prediction-master\\Admission_Model.pkl', 'rb') as file:  
+    Admission_Model = pickle.load(file)
+
+
+#GUI
 
 win = tk.Tk()
 win.title("The Predictor")
@@ -339,8 +358,81 @@ name_label.grid(row=16, column=0, sticky=tk.W, padx=160, pady=10)
 
 
 def Predict():
-    print("Loan is approved")
+    # print("Loan is approved")
+    print('Testing Start')
+    
+    
+    # LOAN
+    """gender=Gender_var.get()
+    married=Married_var.get()
+    dependents=Dependents_value_var.get()
+    Education=Education_var.get()
+    SelfEmployed=Self_employed_var.get()
+    ApplicantIncome=int(Applicant_income_var.get())
+    coApplicantIncome=int(Coapplicant_income_var.get())
+    LoanAmount=int(Loan_amount_var.get())
+    LoanAmountTerm=int(Loan_amount_term_var.get())
+    if Credit_History_var.get()=='Good':
+        CreditHistory=1
+    else:
+        CreditHistory=0
+    PropertyArea=property_area_var.get()
 
+    data = [[gender,married,dependents,Education,SelfEmployed,ApplicantIncome,coApplicantIncome,LoanAmount,LoanAmountTerm,CreditHistory,PropertyArea]]
+
+    newdf = pd.DataFrame(data, columns = ['Gender','Married','Dependents','Education','Self_Employed','ApplicantIncome','CoapplicantIncome','LoanAmount','Loan_Amount_Term','Credit_History','Property_Area'])
+
+    newdf = pd.get_dummies(newdf)
+
+    XtrainCols=['ApplicantIncome', 'CoapplicantIncome', 'LoanAmount',
+        'Loan_Amount_Term', 'Credit_History', 'Gender_Female', 'Gender_Male',
+        'Married_No', 'Married_Yes', 'Dependents_0', 'Dependents_1',
+        'Dependents_2', 'Dependents_3+', 'Education_Graduate',
+        'Education_Not Graduate', 'Self_Employed_No', 'Self_Employed_Yes',
+        'Property_Area_Rural', 'Property_Area_Semiurban',
+        'Property_Area_Urban']
+
+    missing_cols = set( XtrainCols ) - set( newdf.columns )
+    for c in missing_cols:
+        newdf[c] = 0
+
+    newdf = newdf[XtrainCols]
+    yp=Pickled_LR_Model.predict(newdf)
+
+    if yp[0]=='Y':
+        print('Your Loan can be Approved')
+    else:
+        print("Sorry! Your Loan can't be Approved")"""
+
+    #Admission
+
+    # print(GRE_Score_var.get())
+    # print(TOEFL_Score_var.get())
+    # print(University_Rating_var.get())
+    # print(Statement_of_Purpose_Rating_var.get())
+    # print(Letter_of_Recommendation_Strength_var.get())
+    # print(CGPA_var.get())
+    # print(Research_var.get())
+
+    gre=GRE_Score_var.get()
+    toefl=TOEFL_Score_var.get()
+    uni_rating=University_Rating_var.get()
+    sop=Statement_of_Purpose_Rating_var.get()
+    lor=Letter_of_Recommendation_Strength_var.get()
+    cgpa=CGPA_var.get()
+    if Research_var.get()=='Yes':
+        research=1
+    else:
+        research=0
+
+    newx=[[int(gre),int(toefl),int(uni_rating),float(sop),float(lor),float(cgpa),int(research)]]
+
+    newy=Admission_Model.predict(newx)
+    
+    if newy[0] < 0:
+        newy[0]=0
+
+    print('Your Chance of Admission is',int(100*newy[0]),'%')
 
 b1 = tk.Button(Predict_new_frame, text="Predict", command=Predict)
 b1.grid(row=16, column=0)
